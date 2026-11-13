@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Vinted Bundle Search</string>
+    <string name="app_name">Bundle Search for Vinted</string>
     <string name="share_export">Exporter l\'historique</string>
 </resources>

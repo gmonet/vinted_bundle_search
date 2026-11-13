@@ -1,4 +1,4 @@
-# Vinted Bundle Search
+# Bundle Search for Vinted
 
 Trouve **le vendeur Vinted chez qui acheter un lot** : tu décris ce que tu cherches en une ou
 plusieurs requêtes pondérées, l'outil lance les recherches Vinted, regroupe les articles par

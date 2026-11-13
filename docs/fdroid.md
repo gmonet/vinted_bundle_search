@@ -35,7 +35,7 @@ SourceCode: https://github.com/gmonet/vinted_bundle_search
 IssueTracker: https://github.com/gmonet/vinted_bundle_search/issues
 Changelog: https://github.com/gmonet/vinted_bundle_search/releases
 
-AutoName: Vinted Bundle Search
+AutoName: Bundle Search for Vinted
 
 RepoType: git
 Repo: https://github.com/gmonet/vinted_bundle_search.git
@@ -84,9 +84,9 @@ JAVA_HOME=~/.local/share/android-tools/jdk ../venv/bin/fdroid build -v -l io.git
 
 ## Points d'attention pour la revue
 
-- Le nom contient la marque « Vinted » : les relecteurs F-Droid peuvent demander un nom neutre
-  (par ex. « Bundle Search for Vinted » ou un nom propre). Le changement ne touche que
-  `strings.xml`, `fastlane/` et le README.
+- Nom : « Bundle Search for Vinted » (formulation « for X » des clients tiers). Si les
+  relecteurs demandent un nom sans la marque, le changement ne touche que `strings.xml`,
+  `fastlane/`, le README et l'en-tête du userscript.
 - Alternative si l'inclusion dans le dépôt principal traîne : héberger son propre dépôt F-Droid
   (`fdroid init` + `fdroid update`, publié sur GitHub Pages) ou utiliser
   [Obtainium](https://github.com/ImranR98/Obtainium) sur les releases GitHub.

@@ -11,7 +11,7 @@ const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
 const repo = 'https://github.com/gmonet/vinted_bundle_search';
 
 const header = `// ==UserScript==
-// @name         Vinted Bundle Search
+// @name         Bundle Search for Vinted
 // @namespace    ${repo}
 // @version      ${pkg.version}
 // @description  ${pkg.description}
