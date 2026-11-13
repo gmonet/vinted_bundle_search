@@ -30,7 +30,7 @@ const type = (locator, text) => locator.pressSequentially(text, { delay: 70 });
 
 async function fillExample(page, { slow }) {
   const pause = (ms) => (slow ? page.waitForTimeout(ms) : Promise.resolve());
-  await page.locator('.fab').click();
+  if (!(await page.locator('.panel').isVisible())) await page.locator('.fab').click();
   await pause(600);
   const q1 = page.locator('.query').nth(0);
   await (slow
@@ -101,6 +101,7 @@ const browser = await chromium.launch();
 
 // 3. Animated demo (mobile): video → GIF
 const videoDir = mkdtempSync(join(tmpdir(), 'vbs-video-'));
+let trimStart = 0;
 {
   const ctx = await browser.newContext({
     viewport: { width: 390, height: 844 },
@@ -110,16 +111,23 @@ const videoDir = mkdtempSync(join(tmpdir(), 'vbs-video-'));
     locale: 'fr-FR',
     recordVideo: { dir: videoDir, size: { width: 390, height: 844 } },
   });
+  const t0 = Date.now(); // the recording starts with the page
   const page = await ctx.newPage();
   await page.goto(URL);
-  await page.waitForTimeout(800);
+  await page.locator('.fab').click();
+  await page.locator('.panel').waitFor();
+  // The dev page behind the panel is cut from the GIF: it starts once the panel is open.
+  trimStart = (Date.now() - t0) / 1000 + 0.3;
+  await page.waitForTimeout(700);
   await fillExample(page, { slow: true });
   await runAndWait(page);
-  await page.waitForTimeout(1200);
-  await page.locator('.content').evaluate((el) => el.scrollBy({ top: 420, behavior: 'smooth' }));
   await page.waitForTimeout(1500);
-  await page.locator('.tab', { hasText: 'Historique' }).click();
+  const scroll = (top) =>
+    page.locator('.content').evaluate((el, t) => el.scrollTo({ top: t, behavior: 'smooth' }), top);
+  await scroll(420);
   await page.waitForTimeout(1800);
+  await scroll(0);
+  await page.waitForTimeout(4000); // hold on the results before looping
   await ctx.close();
 }
 await browser.close();
@@ -135,6 +143,8 @@ execFileSync('ffmpeg', [
   '-y',
   '-loglevel',
   'error',
+  '-ss',
+  trimStart.toFixed(2),
   '-i',
   video,
   '-vf',
