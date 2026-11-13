@@ -1,0 +1,31 @@
+{
+  "name": "vinted-bundle-search",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Recherche Vinted multi-requêtes pondérées qui regroupe les résultats par vendeur pour trouver les meilleurs lots.",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs --dev",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run typecheck && npm run test && npm run format:check",
+    "android": "npm run build && cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "preact": "^10.28.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0",
+    "prettier": "^3.10.0",
+    "typescript": "^5.9.0",
+    "vitest": "^4.0.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}

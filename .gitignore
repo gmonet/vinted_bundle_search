@@ -1,0 +1,27 @@
+# Dépendances / sorties de build JS
+node_modules/
+dist/
+coverage/
+
+# Android / Gradle
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/keystore.properties
+*.jks
+*.keystore
+*.apk
+*.aab
+.kotlin/
+
+# Éditeurs / OS
+.idea/
+*.iml
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+
+# Divers
+*.log
+.env

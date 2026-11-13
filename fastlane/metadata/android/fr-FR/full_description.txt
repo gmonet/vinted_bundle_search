@@ -1,0 +1,10 @@
+<p>Décris ce que tu cherches en une ou plusieurs <b>requêtes</b> (mots-clés et filtres Vinted : catégorie, marque, état, taille, prix…), chacune avec des <b>points</b> et un <b>maximum</b> d'articles. L'application lance les recherches, regroupe les articles par vendeur et classe les <b>lots</b> par score, pour trouver le vendeur chez qui tout acheter en un seul envoi.</p>
+<ul>
+<li>Affectation optimale des articles aux requêtes, plafonds par requête</li>
+<li>Analyse du dressing complet des meilleurs vendeurs</li>
+<li>Note du vendeur, réduction lot, mode vacances</li>
+<li>Historique des recherches : rouvrir, modifier, relancer (nouveaux articles signalés)</li>
+<li>Export/import pour synchroniser avec la version PC (userscript)</li>
+</ul>
+<p>Aucun compte requis, aucun traqueur. L'application affiche vinted.fr dans une WebView et ne fait que lire des informations publiques ; elle n'achète rien et n'envoie aucun message.</p>
+<p>Projet indépendant, non affilié à Vinted.</p>

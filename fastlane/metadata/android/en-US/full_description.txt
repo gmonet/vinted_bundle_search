@@ -1,0 +1,10 @@
+<p>Describe what you are looking for with one or more <b>queries</b> (keywords and Vinted filters: category, brand, condition, size, price…), each with <b>points</b> and a <b>maximum</b> number of items. The app runs the searches, groups items by seller and ranks the <b>bundles</b> by score, so you can buy everything from one seller in a single shipment.</p>
+<ul>
+<li>Optimal assignment of items to queries, per-query caps</li>
+<li>Full wardrobe scan of the best sellers</li>
+<li>Seller rating, bundle discount, holiday mode</li>
+<li>Search history: reopen, edit, re-run (new items highlighted)</li>
+<li>Export/import to sync with the desktop version (userscript)</li>
+</ul>
+<p>No account required, no trackers. The app shows vinted.fr in a WebView and only reads public information; it never buys anything or sends messages.</p>
+<p>Independent project, not affiliated with Vinted. User interface in French.</p>
