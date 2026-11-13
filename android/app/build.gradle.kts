@@ -6,10 +6,15 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-// Single source of truth for the version: the root package.json.
+// Single source of truth for the version: the root package.json ("version" + "versionCode",
+// the latter is read as-is by F-Droid's update checker). Convention: major*10000+minor*100+patch.
 val pkg = JsonSlurper().parse(rootProject.file("../package.json")) as Map<*, *>
 val appVersion = pkg["version"] as String
+val appVersionCode = (pkg["versionCode"] as Number).toInt()
 val (vMajor, vMinor, vPatch) = appVersion.split(".").map { it.takeWhile(Char::isDigit).toInt() }
+check(appVersionCode == vMajor * 10000 + vMinor * 100 + vPatch) {
+    "package.json versionCode ($appVersionCode) does not match version $appVersion"
+}
 
 // The web bundle (TypeScript UI + engine) is built by `npm run build` at the repo root.
 val webBundle = rootProject.file("../dist/vbs.js")
@@ -39,7 +44,7 @@ android {
         applicationId = "io.github.gmonet.vintedbundlesearch"
         minSdk = 26
         targetSdk = 35
-        versionCode = vMajor * 10000 + vMinor * 100 + vPatch
+        versionCode = appVersionCode
         versionName = appVersion
     }
 
