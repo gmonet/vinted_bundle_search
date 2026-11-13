@@ -41,8 +41,8 @@ RepoType: git
 Repo: https://github.com/gmonet/vinted_bundle_search.git
 
 Builds:
-  - versionName: 0.1.0
-    versionCode: 100
+  - versionName: 0.1.1
+    versionCode: 101
     commit: ceb0916bbc83187a9e33ad35b5f527a5f01ade73
     subdir: android/app
     sudo:
@@ -58,8 +58,8 @@ Builds:
 AutoUpdateMode: Version
 UpdateCheckMode: Tags ^v[0-9.]+$
 UpdateCheckData: package.json|"versionCode":\s*(\d+)|.|"version":\s*"([\d.]+)"
-CurrentVersion: 0.1.0
-CurrentVersionCode: 100
+CurrentVersion: 0.1.1
+CurrentVersionCode: 101
 ```
 
 Points clés :

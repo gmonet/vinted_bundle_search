@@ -1,6 +1,6 @@
 {
   "name": "vinted-bundle-search",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Recherche Vinted multi-requêtes pondérées qui regroupe les résultats par vendeur pour trouver les meilleurs lots.",
   "license": "GPL-3.0-or-later",
@@ -30,5 +30,5 @@
   "allowScripts": {
     "esbuild@0.28.2": true
   },
-  "versionCode": 100
+  "versionCode": 101
 }
