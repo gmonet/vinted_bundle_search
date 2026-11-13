@@ -14,13 +14,15 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check": "npm run typecheck && npm run test && npm run format:check",
-    "android": "npm run build && cd android && ./gradlew assembleDebug"
+    "android": "npm run build && cd android && ./gradlew assembleDebug",
+    "screenshots": "node scripts/screenshots.mjs"
   },
   "dependencies": {
     "preact": "^10.28.2"
   },
   "devDependencies": {
     "esbuild": "^0.28.0",
+    "playwright": "^1.65.0",
     "prettier": "^3.10.0",
     "typescript": "^5.9.0",
     "vitest": "^4.0.0"

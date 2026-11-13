@@ -32,17 +32,36 @@ const SELLERS = Array.from({ length: 30 }, (_, i) => ({
   login: `vendeur_${['alice', 'bob', 'chloe', 'dan', 'eva', 'fred'][i % 6]}${i}`,
 }));
 
+const TOYS = ['🚓', '🚔', '👮', '🚁', '🚒', '🏍️', '🚨', '🧸', '🏰', '🚂'];
+
 function photo(id: number) {
   const hue = (id * 47) % 360;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="310" height="430"><rect width="100%" height="100%" fill="hsl(${hue},45%,70%)"/><text x="50%" y="50%" font-size="40" text-anchor="middle" fill="#fff">${id % 1000}</text></svg>`;
+  const toy = TOYS[id % TOYS.length];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="310" height="430"><rect width="100%" height="100%" fill="hsl(${hue},40%,82%)"/><text x="50%" y="56%" font-size="150" text-anchor="middle">${toy}</text></svg>`;
   return { url: `data:image/svg+xml,${encodeURIComponent(svg)}`, thumbnails: [] };
 }
 
-function item(id: number, text: string, sellerIdx: number) {
+const STATUS_IDS: Record<string, string> = {
+  '6': 'Neuf avec étiquette',
+  '1': 'Neuf sans étiquette',
+  '2': 'Très bon état',
+  '3': 'Bon état',
+  '4': 'Satisfaisant',
+};
+
+/** Search filters honoured by the fake API (so screenshots stay consistent). */
+interface Filters {
+  statuses: string[];
+  priceFrom: number;
+  priceTo: number;
+}
+const NO_FILTERS: Filters = { statuses: STATUSES, priceFrom: 1, priceTo: 15 };
+
+function item(id: number, text: string, sellerIdx: number, f: Filters = NO_FILTERS) {
   const s = SELLERS[sellerIdx]!;
   const words = text.trim() ? text.trim().split(/\s+/) : ['article'];
   const title = [...words.map((w) => w[0]!.toUpperCase() + w.slice(1)), pick(WORDS)].join(' ');
-  const price = Math.round((1 + rand() * 14) * 2) / 2;
+  const price = Math.round((f.priceFrom + rand() * (f.priceTo - f.priceFrom)) * 2) / 2;
   return {
     id,
     title,
@@ -51,7 +70,7 @@ function item(id: number, text: string, sellerIdx: number) {
     price: { amount: price.toFixed(2), currency_code: 'EUR' },
     total_item_price: { amount: (price * 1.05 + 0.7).toFixed(2), currency_code: 'EUR' },
     user: { id: s.id, login: s.login, business: sellerIdx % 11 === 0 },
-    item_box: { first_line: words[0], second_line: `Taille unique · ${pick(STATUSES)}` },
+    item_box: { first_line: words[0], second_line: `Taille unique · ${pick(f.statuses)}` },
   };
 }
 
@@ -67,12 +86,19 @@ const routes: Record<string, (u: URL) => unknown> = {
     const page = Number(u.searchParams.get('page') ?? 1);
     seed = hash(text) + page;
     const n = page < 3 ? 96 : 40;
+    const statusIds = u.searchParams.getAll('attribute_ids[status]');
+    const f: Filters = {
+      statuses: statusIds.length ? statusIds.map((id) => STATUS_IDS[id]!) : STATUSES,
+      priceFrom: Number(u.searchParams.get('price_from') ?? 1),
+      priceTo: Number(u.searchParams.get('price_to') ?? 15),
+    };
     // A few sellers get most items so that bundles emerge.
     const items = Array.from({ length: n }, (_, i) =>
       item(
         (hash(text) % 100000) + page * 1000 + i,
         rand() < 0.15 ? 'playmobil pompier' : text,
         Math.floor(rand() ** 2.5 * SELLERS.length),
+        f,
       ),
     );
     return { items, pagination: { current_page: page, total_pages: 3, per_page: 96 } };

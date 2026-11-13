@@ -62,6 +62,7 @@ npm test               # tests seuls
 npm run build          # dist/vbs.js + dist/vinted-bundle-search.user.js
 npm run dev            # watch + serveur http://localhost:8642 (page de dev avec API factice)
 npm run format         # prettier
+npm run screenshots    # régénère docs/images/ (Playwright + ffmpeg, API factice)
 npm run android        # build JS puis APK debug (nécessite JAVA_HOME et ANDROID_HOME)
 ```
 
@@ -104,7 +105,9 @@ ni de message. L'outil lit des données publiques et aide à décider, l'utilisa
   l'APK doit rester compatible F-Droid : aucune lib propriétaire, pas de Google Play Services).
 - Stockage : toujours via `KVStore` (localStorage sur PC, fichiers privés via le bridge sur
   Android). Format versionné (`history.v1`) ; toute évolution du modèle passe par `migrate()`.
-- Les sorties de build (`dist/`, APK) ne sont pas versionnées.
+- Les sorties de build (`dist/`, APK) ne sont pas versionnées. Les visuels du README
+  (`docs/images/`) le sont : régénère-les avec `npm run screenshots` quand l'UI change, et
+  n'y mets jamais de vraies données Vinted (pseudos et photos de vrais vendeurs).
 - Commits : messages courts à l'impératif, en français ou en anglais, un sujet par commit.
   `npm run check` doit passer.
 

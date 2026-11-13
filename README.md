@@ -7,6 +7,25 @@ vendeur et classe les vendeurs selon un score.
 Fonctionne sur **PC** (extension de navigateur via userscript) et sur **Android** (APK, prévu pour
 F-Droid), avec le même code.
 
+<p align="center">
+  <img src="docs/images/demo.gif" width="320" alt="Démo : deux requêtes pondérées, lancement, lots classés par vendeur, historique">
+</p>
+
+| Saisie des requêtes                                   | Lots classés par score                                 | Historique                                             |
+| ----------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------ |
+| <img src="docs/images/editor-mobile.png" width="240"> | <img src="docs/images/results-mobile.png" width="240"> | <img src="docs/images/history-mobile.png" width="240"> |
+
+<details>
+<summary>Version PC (thème sombre) et application Android</summary>
+
+<img src="docs/images/results-desktop.png" alt="Résultats sur PC, thème sombre">
+
+<img src="docs/images/android-app.png" width="300" alt="Application Android sur vinted.fr">
+
+</details>
+
+<sub>Captures générées sur une API factice (`npm run screenshots`) : vendeurs et articles fictifs.</sub>
+
 ## Principe
 
 Une **recherche** contient une ou plusieurs **requêtes**. Chaque requête a :
