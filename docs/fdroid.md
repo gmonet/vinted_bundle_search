@@ -41,7 +41,8 @@ AutoName: Bundle Search for Vinted
 
 RepoType: git
 Repo: https://github.com/gmonet/vinted_bundle_search.git
-Binaries: https://github.com/gmonet/vinted_bundle_search/releases/download/v%v/vinted-bundle-search-v%v.apk
+Binaries: 
+  https://github.com/gmonet/vinted_bundle_search/releases/download/v%v/vinted-bundle-search-v%v.apk
 
 Builds:
   - versionName: 0.1.1
