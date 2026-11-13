@@ -15,19 +15,25 @@
 
 - `NonFreeNet` : l'application dépend d'un service non libre (vinted.fr).
 
-## Recette de build (à proposer dans fdroiddata)
+## Recette de build (validée localement)
 
-Fichier `metadata/io.github.gmonet.vintedbundlesearch.yml` (adapter le commit/tag) :
+Fichier `metadata/io.github.gmonet.vintedbundlesearch.yml` de fdroiddata. Validé avec
+`fdroid lint`, `fdroid rewritemeta` (aucune modification) et `fdroid build -l` (fdroidserver
+2.4.5) : le scanner ne signale rien, et l'APK obtenu est **identique bit à bit** à
+`./gradlew assembleRelease` lancé depuis le même commit, donc le build est reproductible.
 
 ```yaml
+AntiFeatures:
+  NonFreeNet:
+    en-US: Depends on vinted.fr, a proprietary online marketplace.
+    fr-FR: Dépend de vinted.fr, une place de marché en ligne propriétaire.
 Categories:
-  - Shopping
+  - Market & Price
 License: GPL-3.0-or-later
 AuthorName: gmonet
 SourceCode: https://github.com/gmonet/vinted_bundle_search
 IssueTracker: https://github.com/gmonet/vinted_bundle_search/issues
-AntiFeatures:
-  NonFreeNet: {}
+Changelog: https://github.com/gmonet/vinted_bundle_search/releases
 
 AutoName: Vinted Bundle Search
 
@@ -37,29 +43,44 @@ Repo: https://github.com/gmonet/vinted_bundle_search.git
 Builds:
   - versionName: 0.1.0
     versionCode: 100
-    commit: v0.1.0
+    commit: ceb0916bbc83187a9e33ad35b5f527a5f01ade73
     subdir: android/app
     sudo:
       - apt-get update
       - apt-get install -y npm
-    prebuild:
+    gradle:
+      - yes
+    build:
       - cd ../..
       - npm ci
       - npm run build
-    gradle:
-      - yes
 
 AutoUpdateMode: Version
-UpdateCheckMode: Tags ^v\d+\.\d+\.\d+$
-UpdateCheckData: package.json|"version":\s*"(\d+)\.(\d+)\.(\d+)"|.|"version":\s*"([\d.]+)"
+UpdateCheckMode: Tags ^v[0-9.]+$
+UpdateCheckData: package.json|"versionCode":\s*(\d+)|.|"version":\s*"([\d.]+)"
 CurrentVersion: 0.1.0
 CurrentVersionCode: 100
 ```
 
-> `UpdateCheckData` est à vérifier avec `fdroid checkupdates` : le versionCode est calculé
-> (major·10000 + minor·100 + patch), et F-Droid préfère parfois un `versionCode` littéral dans
-> `build.gradle.kts`. Si la revue le demande, écrire les deux valeurs en dur et les synchroniser
-> avec `package.json` au moment de la release.
+Points clés :
+
+- `npm ci && npm run build` est dans `build:` et non dans `prebuild:`, parce que le scanner
+  F-Droid s'exécute entre les deux. Lancé plus tôt, il supprimerait les binaires de
+  `node_modules` (esbuild), ce qui casserait le build.
+- `versionCode` est écrit en clair dans `package.json`, pour que `UpdateCheckData` le lise ;
+  Gradle vérifie qu'il correspond à `version`.
+- À chaque release, il suffit de mettre à jour `version` et `versionCode` dans `package.json`,
+  d'ajouter `fastlane/metadata/android/*/changelogs/<versionCode>.txt` et de pousser le tag
+  `vX.Y.Z`. F-Droid détecte le tag automatiquement.
+
+Pour tester une modification de la recette en local (outillage installé dans
+`~/.local/share/fdroid-tools`) :
+
+```bash
+cd ~/.local/share/fdroid-tools/fdroiddata
+../venv/bin/fdroid lint io.github.gmonet.vintedbundlesearch
+JAVA_HOME=~/.local/share/android-tools/jdk ../venv/bin/fdroid build -v -l io.github.gmonet.vintedbundlesearch
+```
 
 ## Points d'attention pour la revue
 
