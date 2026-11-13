@@ -19,8 +19,10 @@
 
 Fichier `metadata/io.github.gmonet.vintedbundlesearch.yml` de fdroiddata. Validé avec
 `fdroid lint`, `fdroid rewritemeta` (aucune modification) et `fdroid build -l` (fdroidserver
-2.4.5) : le scanner ne signale rien, et l'APK obtenu est **identique bit à bit** à
-`./gradlew assembleRelease` lancé depuis le même commit, donc le build est reproductible.
+2.4.5) : le scanner ne signale rien, et F-Droid reconstruit un APK **identique bit à bit** à
+l'APK signé publié sur la release GitHub (`Binaries`), puis vérifie la signature
+(`AllowedAPKSigningKeys`) : c'est donc l'APK signé avec notre clé qui est distribué (builds
+reproductibles).
 
 ```yaml
 AntiFeatures:
@@ -39,11 +41,12 @@ AutoName: Bundle Search for Vinted
 
 RepoType: git
 Repo: https://github.com/gmonet/vinted_bundle_search.git
+Binaries: https://github.com/gmonet/vinted_bundle_search/releases/download/v%v/vinted-bundle-search-v%v.apk
 
 Builds:
   - versionName: 0.1.1
     versionCode: 101
-    commit: ceb0916bbc83187a9e33ad35b5f527a5f01ade73
+    commit: 739641dbafdf923a2f6371fcdcb33e01c71b5185
     subdir: android/app
     sudo:
       - apt-get update
@@ -54,6 +57,8 @@ Builds:
       - cd ../..
       - npm ci
       - npm run build
+
+AllowedAPKSigningKeys: 9019292708ccc21e57703c855d100800c5d38cff619e086b462f1f81001840fc
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags ^v[0-9.]+$
@@ -69,9 +74,13 @@ Points clés :
   `node_modules` (esbuild), ce qui casserait le build.
 - `versionCode` est écrit en clair dans `package.json`, pour que `UpdateCheckData` le lise ;
   Gradle vérifie qu'il correspond à `version`.
-- À chaque release, il suffit de mettre à jour `version` et `versionCode` dans `package.json`,
-  d'ajouter `fastlane/metadata/android/*/changelogs/<versionCode>.txt` et de pousser le tag
-  `vX.Y.Z`. F-Droid détecte le tag automatiquement.
+- **Procédure de release** : mettre à jour `version` et `versionCode` dans `package.json`,
+  ajouter `fastlane/metadata/android/*/changelogs/<versionCode>.txt`, committer, pousser le
+  tag `vX.Y.Z` (le workflow publie le userscript), puis lancer `scripts/release-apk.sh vX.Y.Z`
+  pour construire et joindre l'APK signé. F-Droid détecte le tag, reconstruit et compare
+  automatiquement. La clé est hors du dépôt (`~/.local/share/vinted-bundle-search-signing/`,
+  chemin et mot de passe dans `android/keystore.properties`) : **la sauvegarder**, sa perte
+  empêche toute mise à jour.
 
 Pour tester une modification de la recette en local (outillage installé dans
 `~/.local/share/fdroid-tools`) :

@@ -30,5 +30,5 @@ mkdir -p "$ROOT/dist"
 cp android/app/build/outputs/apk/release/app-release.apk "$OUT"
 APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
 "$APKSIGNER" verify --print-certs "$OUT" | grep -i "sha-256"
-gh release upload "$TAG" "$OUT" --clobber
+(cd "$ROOT" && gh release upload "$TAG" "$OUT" --clobber)
 echo "Uploaded $OUT"
