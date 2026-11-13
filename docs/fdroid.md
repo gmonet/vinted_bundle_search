@@ -19,11 +19,13 @@
 
 Fichier `metadata/io.github.gmonet.vintedbundlesearch.yml` de fdroiddata. Validé avec
 `fdroid lint`, `fdroid rewritemeta` (aucune modification) et `fdroid build -l` (fdroidserver
-2.4.5) : le scanner ne signale rien, et F-Droid reconstruit un APK **identique bit à bit** à
+2.4.5) ; le bloc ci-dessous est exclu de prettier pour garder le format exact de
+`rewritemeta`. Le scanner ne signale rien, et F-Droid reconstruit un APK **identique bit à bit** à
 l'APK signé publié sur la release GitHub (`Binaries`), puis vérifie la signature
 (`AllowedAPKSigningKeys`) : c'est donc l'APK signé avec notre clé qui est distribué (builds
 reproductibles).
 
+<!-- prettier-ignore -->
 ```yaml
 AntiFeatures:
   NonFreeNet:
