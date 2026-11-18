@@ -1,0 +1,1 @@
+Fix filters with several values (condition, brand, size, color, material, category): Vinted ignored them.

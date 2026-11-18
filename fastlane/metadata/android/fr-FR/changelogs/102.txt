@@ -1,0 +1,1 @@
+Correction des filtres à plusieurs valeurs (état, marque, taille, couleur, matière, catégorie) : Vinted les ignorait.
