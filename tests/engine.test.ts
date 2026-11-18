@@ -128,6 +128,25 @@ describe('runSearch', () => {
     expect(res2.lots.map((l) => l.seller.id).sort()).toEqual(['100', '200']);
   });
 
+  it('drops search results whose condition was not selected', async () => {
+    // e.g. Vinted ignoring a malformed status filter and returning every condition.
+    const { client, calls } = setup(() => ({
+      items: [
+        searchItem(1, 100, 'Playmobil police', 3, 'Neuf avec étiquette'),
+        searchItem(2, 200, 'Playmobil police', 3, 'Bon état'),
+        searchItem(3, 300, 'Playmobil police', 3, 'Satisfaisant'),
+      ],
+      pagination: { total_pages: 1 },
+    }));
+    const d = newSearch({
+      queries: [newQuery({ text: 'playmobil police', statuses: ['6', '4'] })],
+    });
+    d.settings.deepScanTop = 0;
+    const res = await runSearch(d, client);
+    expect(calls[0]!.searchParams.get('attribute_ids[status]')).toBe('6,4');
+    expect(res.lots.map((l) => l.seller.id).sort()).toEqual(['100', '300']);
+  });
+
   it('flags new items relative to the previous run', async () => {
     const { client } = setup(() => ({
       items: [searchItem(1, 100, 'Playmobil police', 3), searchItem(2, 100, 'Playmobil police', 3)],

@@ -21,6 +21,10 @@ describe('VintedClient', () => {
       priceTo: 5,
       statuses: ['2', '3'],
       catalogs: [{ id: '1499', title: 'Jeux' }],
+      brands: [
+        { id: '1', title: 'Playmobil' },
+        { id: '2', title: 'LEGO' },
+      ],
     });
     const res = await client(fn).searchItems(q, 2, 'relevance');
     const url = calls[0]!;
@@ -28,8 +32,11 @@ describe('VintedClient', () => {
     expect(url.searchParams.get('search_text')).toBe('playmobil');
     expect(url.searchParams.get('page')).toBe('2');
     expect(url.searchParams.get('price_to')).toBe('5');
-    expect(url.searchParams.getAll('attribute_ids[status]')).toEqual(['2', '3']);
+    // One comma-separated param per filter: Vinted ignores a repeated param.
+    expect(url.searchParams.getAll('attribute_ids[status]')).toEqual(['2,3']);
+    expect(url.searchParams.getAll('attribute_ids[brand]')).toEqual(['1,2']);
     expect(url.searchParams.getAll('attribute_ids[catalog]')).toEqual(['1499']);
+    expect(url.searchParams.has('attribute_ids[size]')).toBe(false);
     expect(res.totalPages).toBe(3);
     expect(res.items[0]).toMatchObject({
       id: '10',

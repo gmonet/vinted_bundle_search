@@ -11,13 +11,19 @@ depuis une page vinted.fr (cookies et contexte anti-bot du site), avec
 
 `GET https://api.vinted.fr/svc-catalogue/items`
 
-| Paramètre                | Exemple            | Notes                                                           |
-| ------------------------ | ------------------ | --------------------------------------------------------------- |
-| `search_text`            | `playmobil police` | recherche floue (pas un ET logique strict)                      |
-| `page`, `per_page`       | `1`, `96`          | **96 max** (au-delà, plafonné à 96)                             |
-| `order`                  | `relevance`        | `newest_first`, `price_low_to_high` (vérifiés)                  |
-| `price_from`, `price_to` | `5`                | avec `currency=EUR`                                             |
-| `attribute_ids[catalog]` | `1499`             | répétable ; idem `brand`, `status`, `size`, `color`, `material` |
+| Paramètre                | Exemple            | Notes                                               |
+| ------------------------ | ------------------ | --------------------------------------------------- |
+| `search_text`            | `playmobil police` | recherche floue (pas un ET logique strict)          |
+| `page`, `per_page`       | `1`, `96`          | **96 max** (au-delà, plafonné à 96)                 |
+| `order`                  | `relevance`        | `newest_first`, `price_low_to_high` (vérifiés)      |
+| `price_from`, `price_to` | `5`                | avec `currency=EUR`                                 |
+| `attribute_ids[catalog]` | `1499,1500`        | idem `brand`, `status`, `size`, `color`, `material` |
+
+Plusieurs valeurs : **une seule occurrence, séparées par des virgules** (`attribute_ids[status]=6,4`).
+Répéter le paramètre (`attribute_ids[status]=6&attribute_ids[status]=4`) fait ignorer le filtre
+en entier, sans erreur. Vérifié le 2026-11-18 pour les six attributs (avec virgules, résultats =
+union exacte des deux valeurs ; répété, résultats identiques à l'absence de filtre), et pour
+`attribute_ids[catalog]` de `svc-filters/filters/facets`.
 
 Ignorés : `user_id` (pas de recherche par vendeur ici, voir dressing).
 

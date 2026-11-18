@@ -86,7 +86,9 @@ const routes: Record<string, (u: URL) => unknown> = {
     const page = Number(u.searchParams.get('page') ?? 1);
     seed = hash(text) + page;
     const n = page < 3 ? 96 : 40;
-    const statusIds = u.searchParams.getAll('attribute_ids[status]');
+    const statusIds = (u.searchParams.get('attribute_ids[status]') ?? '')
+      .split(',')
+      .filter(Boolean);
     const f: Filters = {
       statuses: statusIds.length ? statusIds.map((id) => STATUS_IDS[id]!) : STATUSES,
       priceFrom: Number(u.searchParams.get('price_from') ?? 1),

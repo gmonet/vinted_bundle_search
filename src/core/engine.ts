@@ -1,5 +1,5 @@
 import { PER_PAGE, VintedError, type VintedClient } from './api';
-import { localMatch, textMatches } from './matching';
+import { localMatch, statusMatches, textMatches } from './matching';
 import { buildLot, sortLots } from './scoring';
 import {
   queryLabel,
@@ -91,7 +91,10 @@ export async function runSearch(
         done++;
         for (const s of res.sellers) if (!sellers.has(s.id)) sellers.set(s.id, s);
         for (const it of res.items) {
-          if (!q.strict || textMatches(q.text, `${it.title} ${it.brand ?? ''}`)) addItem(it, [qi]);
+          if (q.strict && !textMatches(q.text, `${it.title} ${it.brand ?? ''}`)) continue;
+          // Safety net: Vinted silently ignores a filter it does not understand.
+          if (it.status && !statusMatches(it.status, q)) continue;
+          addItem(it, [qi]);
         }
         if (res.items.length < PER_PAGE || page >= res.totalPages) {
           done += settings.pagesPerQuery - page;

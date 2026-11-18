@@ -221,7 +221,7 @@ export class VintedClient {
       ['filter_code', code],
       ['search_text', q.text.trim()],
     ];
-    for (const c of q.catalogs) params.push(['attribute_ids[catalog]', c.id]);
+    pushAttribute(params, 'catalog', ids(q.catalogs));
     const data = await this.getJson<{ options?: RawFacet[] }>(
       `${this.apiOrigin}/svc-filters/filters/facets`,
       params,
@@ -311,13 +311,24 @@ export class VintedClient {
   }
 }
 
+/**
+ * Several values go in ONE comma-separated param (`attribute_ids[status]=6,4`). Repeating the
+ * param (`attribute_ids[status]=6&attribute_ids[status]=4`) makes Vinted silently drop the
+ * whole filter.
+ */
+function pushAttribute(params: Params, code: string, values: string[]) {
+  if (values.length > 0) params.push([`attribute_ids[${code}]`, values.join(',')]);
+}
+
+const ids = (opts: Option[]) => opts.map((o) => o.id);
+
 function pushAttributes(params: Params, q: Query) {
-  for (const c of q.catalogs) params.push(['attribute_ids[catalog]', c.id]);
-  for (const b of q.brands) params.push(['attribute_ids[brand]', b.id]);
-  for (const s of q.statuses) params.push(['attribute_ids[status]', s]);
-  for (const s of q.sizes) params.push(['attribute_ids[size]', s.id]);
-  for (const c of q.colors) params.push(['attribute_ids[color]', c.id]);
-  for (const m of q.materials) params.push(['attribute_ids[material]', m.id]);
+  pushAttribute(params, 'catalog', ids(q.catalogs));
+  pushAttribute(params, 'brand', ids(q.brands));
+  pushAttribute(params, 'status', q.statuses);
+  pushAttribute(params, 'size', ids(q.sizes));
+  pushAttribute(params, 'color', ids(q.colors));
+  pushAttribute(params, 'material', ids(q.materials));
 }
 
 const STATUS_WORDS = /neuf|état|etat|satisfaisant/i;

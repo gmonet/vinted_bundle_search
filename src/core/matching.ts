@@ -40,14 +40,18 @@ export function textMatches(queryText: string, haystack: string): boolean {
 
 const statusTitles = new Map(STATUSES.map((s) => [s.id, normalize(s.title)]));
 
+/** True when the query has no condition filter or `status` (e.g. « Bon état ») is selected. */
+export function statusMatches(status: string | null, q: Query): boolean {
+  if (q.statuses.length === 0) return true;
+  const st = normalize(status ?? '');
+  return q.statuses.some((id) => statusTitles.get(id) === st);
+}
+
 export function localMatch(item: Item, q: Query): boolean {
   if (!textMatches(q.text, `${item.title} ${item.brand ?? ''}`)) return false;
   if (q.priceFrom != null && item.price < q.priceFrom) return false;
   if (q.priceTo != null && item.price > q.priceTo) return false;
-  if (q.statuses.length > 0) {
-    const st = normalize(item.status ?? '');
-    if (!q.statuses.some((id) => statusTitles.get(id) === st)) return false;
-  }
+  if (!statusMatches(item.status, q)) return false;
   if (q.brands.length > 0) {
     const b = normalize(item.brand ?? '');
     if (!q.brands.some((o) => normalize(o.title) === b)) return false;

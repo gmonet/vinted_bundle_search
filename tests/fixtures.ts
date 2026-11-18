@@ -1,6 +1,12 @@
 /** Small synthetic Vinted API responses, shaped like the real ones (see docs/vinted-api.md). */
 
-export function searchItem(id: number, userId: number, title: string, price: number) {
+export function searchItem(
+  id: number,
+  userId: number,
+  title: string,
+  price: number,
+  status = 'Très bon état',
+) {
   return {
     id,
     title,
@@ -9,7 +15,7 @@ export function searchItem(id: number, userId: number, title: string, price: num
     price: { amount: price.toFixed(2), currency_code: 'EUR' },
     total_item_price: { amount: (price + 0.7).toFixed(2), currency_code: 'EUR' },
     user: { id: userId, login: `user${userId}`, business: false },
-    item_box: { first_line: title.split(' ')[0], second_line: 'Taille unique · Très bon état' },
+    item_box: { first_line: title.split(' ')[0], second_line: `Taille unique · ${status}` },
   };
 }
 
